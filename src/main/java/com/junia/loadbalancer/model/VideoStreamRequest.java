@@ -9,7 +9,7 @@ public class VideoStreamRequest extends Request {
     public VideoStreamRequest(String id, LocalDateTime arrivalTime, int durationMinutes) {
         super(id, arrivalTime);
         if (durationMinutes <= 0) {
-            throw new IllegalArgumentException("Duration must be greater than 0.");
+            throw new IllegalArgumentException("La duree doit etre superieure a 0.");
         }
         this.durationMinutes = durationMinutes;
     }

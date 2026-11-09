@@ -13,13 +13,13 @@ public class Server {
 
     public Server(String name, int capacity, int weight, ServerStatus status) {
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("Server name cannot be empty.");
+            throw new IllegalArgumentException("Le nom du serveur est vide.");
         }
         if (capacity <= 0) {
-            throw new IllegalArgumentException("Capacity must be greater than 0.");
+            throw new IllegalArgumentException("La capacite doit etre superieure a 0.");
         }
         if (weight <= 0) {
-            throw new IllegalArgumentException("Weight must be greater than 0.");
+            throw new IllegalArgumentException("Le poids doit etre superieur a 0.");
         }
 
         this.name = name;
@@ -52,7 +52,7 @@ public class Server {
     public void accept(Request request) {
         if (!canAccept(request)) {
             throw new IllegalStateException(
-                    "Server " + name + " cannot accept request " + request.getId()
+                    "Le serveur " + name + " ne peut pas prendre la requete " + request.getId()
             );
         }
         requests.add(request);

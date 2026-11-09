@@ -9,10 +9,10 @@ public abstract class Request {
 
     public Request(String id, LocalDateTime arrivalTime) {
         if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("Request id cannot be empty.");
+            throw new IllegalArgumentException("L id de la requete est vide.");
         }
         if (arrivalTime == null) {
-            throw new IllegalArgumentException("Arrival time is required.");
+            throw new IllegalArgumentException("L heure d arrivee est obligatoire.");
         }
 
         this.id = id;

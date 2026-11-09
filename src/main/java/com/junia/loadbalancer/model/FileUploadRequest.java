@@ -9,7 +9,7 @@ public class FileUploadRequest extends Request {
     public FileUploadRequest(String id, LocalDateTime arrivalTime, int fileSizeMb) {
         super(id, arrivalTime);
         if (fileSizeMb <= 0) {
-            throw new IllegalArgumentException("File size must be greater than 0.");
+            throw new IllegalArgumentException("La taille du fichier doit etre superieure a 0.");
         }
         this.fileSizeMb = fileSizeMb;
     }
