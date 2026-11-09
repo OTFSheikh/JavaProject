@@ -1,0 +1,5 @@
+name,capacity,weight,status
+web-01,100,3,UP
+web-02,80,2,UP
+web-03,50,1,UP
+backup-01,60,1,DOWN

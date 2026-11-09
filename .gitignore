@@ -1,0 +1,11 @@
+# Fichiers générés par Maven
+target/
+
+# Fichiers d'IntelliJ
+.idea/
+*.iml
+out/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
