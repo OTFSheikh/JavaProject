@@ -5,11 +5,11 @@ import java.util.List;
 
 public class Server {
 
-    private String name;
-    private int capacity;
-    private int weight;
+    private final String name;
+    private final int capacity;
+    private final int weight;
     private ServerStatus status;
-    private List<Request> requests;
+    private final List<Request> requests;
 
     public Server(String name, int capacity, int weight, ServerStatus status) {
         if (name == null || name.isBlank()) {
@@ -20,6 +20,9 @@ public class Server {
         }
         if (weight <= 0) {
             throw new IllegalArgumentException("Le poids doit etre superieur a 0.");
+        }
+        if (status == null) {
+            throw new IllegalArgumentException("L etat du serveur est obligatoire.");
         }
 
         this.name = name;

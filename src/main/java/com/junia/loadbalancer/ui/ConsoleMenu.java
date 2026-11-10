@@ -10,8 +10,8 @@ import java.util.Scanner;
 
 public class ConsoleMenu {
 
-    private Scanner scanner;
-    private ConsoleReport report;
+    private final Scanner scanner;
+    private final ConsoleReport report;
 
     public ConsoleMenu(Scanner scanner, ConsoleReport report) {
         this.scanner = scanner;

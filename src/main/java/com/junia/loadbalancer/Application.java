@@ -36,7 +36,13 @@ public class Application {
         ConsoleMenu menu = new ConsoleMenu(scanner, new ConsoleReport(new StatisticsService()));
 
         BalancingStrategy strategy = menu.chooseStrategy();
-        LoadBalancer loadBalancer = new LoadBalancer(servers, strategy);
+        LoadBalancer loadBalancer;
+        try {
+            loadBalancer = new LoadBalancer(servers, strategy);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Donnees incoherentes : " + e.getMessage());
+            return;
+        }
         loadBalancer.assignAll(requests);
 
         menu.run(loadBalancer);

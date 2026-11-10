@@ -31,12 +31,12 @@ mvn test
 
 Dans IntelliJ : clic droit sur le dossier `src/test/java`, puis « Run 'All Tests' ».
 
-Les tests JUnit 5 (36 tests) vérifient la logique métier, pas les getters :
+Les tests JUnit 5 (37 tests) vérifient la logique métier, pas les getters :
 
 - `ServerTest` : acceptation d'une requête, refus quand le serveur est plein ou en panne, requêtes rendues lors d'une panne, capacité invalide.
 - `RequestTest` : calcul de la charge selon le type, valeurs minimales, paramètres invalides.
 - `BalancingStrategyTest` : comportement de chaque stratégie, serveur en panne ignoré, aucun serveur possible, liste vide.
-- `LoadBalancerTest` : répartition, `NoServerAvailableException` quand tout est plein, ordre d'arrivée, redistribution après une panne, requêtes replacées après une réparation, serveur inconnu.
+- `LoadBalancerTest` : répartition, `NoServerAvailableException` quand tout est plein, ordre d'arrivée, redistribution après une panne, requêtes replacées après une réparation, serveur inconnu, noms de serveurs en double.
 - `StatisticsServiceTest` : moyenne sur les serveurs UP, serveur le plus chargé, équilibre (avec le cas limite à 20 points), comptage par type, liste vide.
 - `CsvParserTest` : lignes valides, `InvalidDataException` pour les lignes invalides, lignes fausses ignorées dans un fichier, fichier introuvable.
 
@@ -140,7 +140,7 @@ Le `LoadBalancer` appelle `strategy.chooseServer(...)` sans savoir quelle strat�
 - `InvalidDataException` : lancée quand une ligne d'un fichier CSV est invalide. Elle remplace les exceptions de Java (`NumberFormatException`, `DateTimeParseException`...) par un message clair.
 - `NoServerAvailableException` : lancée par `LoadBalancer.assign()` quand aucun serveur ne peut prendre la requête (tous pleins ou en panne). Elle est attrapée pour ranger la requête dans la liste des rejetées.
 
-Les constructeurs du modèle lancent aussi des `IllegalArgumentException` (capacité négative, nom vide...) et `Server.accept()` lance une `IllegalStateException` si le serveur ne peut pas prendre la requête.
+Les constructeurs lancent aussi des `IllegalArgumentException` (capacité négative, nom vide, deux serveurs avec le même nom dans le `LoadBalancer`...) et `Server.accept()` lance une `IllegalStateException` si le serveur ne peut pas prendre la requête.
 
 ## Principes SOLID appliqués
 

@@ -112,6 +112,14 @@ class LoadBalancerTest {
     }
 
     @Test
+    void shouldRefuseTwoServersWithSameName() {
+        Server copy = new Server("WEB-01", 5, 1, ServerStatus.UP);
+
+        assertThrows(IllegalArgumentException.class,
+                () -> new LoadBalancer(List.of(web1, copy), new LeastLoadedStrategy()));
+    }
+
+    @Test
     void shouldThrowExceptionForUnknownServer() {
         assertThrows(IllegalArgumentException.class, () -> loadBalancer.failServer("toto"));
         assertThrows(IllegalArgumentException.class, () -> loadBalancer.recoverServer("toto"));

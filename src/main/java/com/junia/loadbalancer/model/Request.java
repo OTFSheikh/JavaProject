@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 
 public abstract class Request {
 
-    private String id;
-    private LocalDateTime arrivalTime;
+    private final String id;
+    private final LocalDateTime arrivalTime;
 
     public Request(String id, LocalDateTime arrivalTime) {
         if (id == null || id.isBlank()) {

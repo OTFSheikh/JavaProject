@@ -2,6 +2,9 @@ package com.junia.loadbalancer.strategy;
 
 public class StrategyFactory {
 
+    private StrategyFactory() {
+    }
+
     public static BalancingStrategy fromChoice(int choice) {
         return switch (choice) {
             case 1 -> new RoundRobinStrategy();

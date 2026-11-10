@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class FileUploadRequest extends Request {
 
-    private int fileSizeMb;
+    private final int fileSizeMb;
 
     public FileUploadRequest(String id, LocalDateTime arrivalTime, int fileSizeMb) {
         super(id, arrivalTime);

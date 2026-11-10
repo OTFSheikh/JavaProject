@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ConsoleReport {
 
-    private StatisticsService statistics;
+    private final StatisticsService statistics;
 
     public ConsoleReport(StatisticsService statistics) {
         this.statistics = statistics;

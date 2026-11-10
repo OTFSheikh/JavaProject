@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class VideoStreamRequest extends Request {
 
-    private int durationMinutes;
+    private final int durationMinutes;
 
     public VideoStreamRequest(String id, LocalDateTime arrivalTime, int durationMinutes) {
         super(id, arrivalTime);

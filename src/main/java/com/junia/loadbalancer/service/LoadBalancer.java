@@ -7,19 +7,22 @@ import com.junia.loadbalancer.strategy.BalancingStrategy;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class LoadBalancer {
 
-    private List<Server> servers;
-    private BalancingStrategy strategy;
-    private List<Request> rejectedRequests;
+    private final List<Server> servers;
+    private final BalancingStrategy strategy;
+    private final List<Request> rejectedRequests;
 
     public LoadBalancer(List<Server> servers, BalancingStrategy strategy) {
         if (servers == null || strategy == null) {
             throw new IllegalArgumentException("Les serveurs et la strategie sont obligatoires.");
         }
+        checkUniqueNames(servers);
         this.servers = new ArrayList<>(servers);
         this.strategy = strategy;
         this.rejectedRequests = new ArrayList<>();
@@ -82,6 +85,16 @@ public class LoadBalancer {
         return servers.stream()
                 .filter(server -> server.getName().equalsIgnoreCase(name))
                 .findFirst();
+    }
+
+    // on retrouve les serveurs par leur nom, donc deux serveurs ne peuvent pas avoir le meme
+    private void checkUniqueNames(List<Server> servers) {
+        Set<String> names = new HashSet<>();
+        for (Server server : servers) {
+            if (!names.add(server.getName().toLowerCase())) {
+                throw new IllegalArgumentException("Deux serveurs ont le meme nom : " + server.getName());
+            }
+        }
     }
 
     private boolean tryAssign(Request request) {
