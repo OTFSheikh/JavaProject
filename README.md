@@ -87,7 +87,7 @@ Les classes principales :
 - `InvalidDataException` : une ligne d'un CSV est invalide (nombre, date ou type incorrect).
 - `NoServerAvailableException` : aucun serveur ne peut prendre la requête. Le `LoadBalancer` l'attrape pour ranger la requête dans les rejetées.
 
-Les constructeurs lancent aussi des `IllegalArgumentException` (capacité négative, nom vide, deux serveurs avec le même nom, deux requêtes avec le même id). Dans ces deux derniers cas, l'application s'arrête avec un message.
+Les constructeurs et le `LoadBalancer` lancent aussi des `IllegalArgumentException` (capacité négative, nom vide, deux serveurs avec le même nom, deux requêtes avec le même id). Dans ces deux derniers cas, l'application s'arrête avec un message.
 
 ## SOLID
 
