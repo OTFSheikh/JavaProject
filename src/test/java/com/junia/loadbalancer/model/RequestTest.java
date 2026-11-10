@@ -18,6 +18,13 @@ class RequestTest {
     }
 
     @Test
+    void shouldKnowItsOwnType() {
+        Request request = new VideoStreamRequest("R1", NOW, 30);
+
+        assertEquals(RequestType.STREAM, request.getType());
+    }
+
+    @Test
     void shouldUseMinimumLoadForSmallUploadAndShortStream() {
         assertEquals(2, new FileUploadRequest("R1", NOW, 1).getLoad());
         assertEquals(5, new VideoStreamRequest("R2", NOW, 1).getLoad());

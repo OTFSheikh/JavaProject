@@ -1,6 +1,7 @@
 package com.junia.loadbalancer.service;
 
 import com.junia.loadbalancer.model.Request;
+import com.junia.loadbalancer.model.RequestType;
 import com.junia.loadbalancer.model.Server;
 
 import java.util.Comparator;
@@ -42,7 +43,7 @@ public class StatisticsService {
         return max - min <= BALANCE_THRESHOLD;
     }
 
-    public Map<String, Long> countRequestsByType(List<Server> servers) {
+    public Map<RequestType, Long> countRequestsByType(List<Server> servers) {
         return servers.stream()
                 .flatMap(server -> server.getRequests().stream())
                 .collect(Collectors.groupingBy(Request::getType, Collectors.counting()));

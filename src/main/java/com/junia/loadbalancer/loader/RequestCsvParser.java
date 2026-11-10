@@ -4,6 +4,7 @@ import com.junia.loadbalancer.exception.InvalidDataException;
 import com.junia.loadbalancer.model.FileUploadRequest;
 import com.junia.loadbalancer.model.HttpRequest;
 import com.junia.loadbalancer.model.Request;
+import com.junia.loadbalancer.model.RequestType;
 import com.junia.loadbalancer.model.VideoStreamRequest;
 
 import java.time.LocalDateTime;
@@ -21,15 +22,14 @@ public class RequestCsvParser extends AbstractCsvParser<Request> {
 
         try {
             String id = columns[0].trim();
-            String type = columns[1].trim().toUpperCase();
+            RequestType type = parseType(columns[1]);
             LocalDateTime arrivalTime = LocalDateTime.parse(columns[2].trim());
             String parameter = columns[3].trim();
 
             return switch (type) {
-                case "HTTP" -> new HttpRequest(id, arrivalTime);
-                case "UPLOAD" -> new FileUploadRequest(id, arrivalTime, Integer.parseInt(parameter));
-                case "STREAM" -> new VideoStreamRequest(id, arrivalTime, Integer.parseInt(parameter));
-                default -> throw new InvalidDataException("type de requete inconnu : " + type);
+                case HTTP -> new HttpRequest(id, arrivalTime);
+                case UPLOAD -> new FileUploadRequest(id, arrivalTime, Integer.parseInt(parameter));
+                case STREAM -> new VideoStreamRequest(id, arrivalTime, Integer.parseInt(parameter));
             };
         } catch (DateTimeParseException e) {
             throw new InvalidDataException("date invalide : " + columns[2]);
@@ -37,6 +37,14 @@ public class RequestCsvParser extends AbstractCsvParser<Request> {
             throw new InvalidDataException("parametre invalide : " + columns[3]);
         } catch (IllegalArgumentException e) {
             throw new InvalidDataException(e.getMessage());
+        }
+    }
+
+    private RequestType parseType(String value) throws InvalidDataException {
+        try {
+            return RequestType.valueOf(value.trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidDataException("type de requete inconnu : " + value);
         }
     }
 }

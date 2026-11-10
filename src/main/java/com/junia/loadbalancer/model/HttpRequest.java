@@ -14,7 +14,7 @@ public class HttpRequest extends Request {
     }
 
     @Override
-    public String getType() {
-        return "HTTP";
+    public RequestType getType() {
+        return RequestType.HTTP;
     }
 }

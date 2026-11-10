@@ -39,11 +39,11 @@ public class Application {
         LoadBalancer loadBalancer;
         try {
             loadBalancer = new LoadBalancer(servers, strategy);
+            loadBalancer.assignAll(requests);
         } catch (IllegalArgumentException e) {
             System.out.println("Donnees incoherentes : " + e.getMessage());
             return;
         }
-        loadBalancer.assignAll(requests);
 
         menu.run(loadBalancer);
     }

@@ -2,6 +2,7 @@ package com.junia.loadbalancer.service;
 
 import com.junia.loadbalancer.model.FileUploadRequest;
 import com.junia.loadbalancer.model.HttpRequest;
+import com.junia.loadbalancer.model.RequestType;
 import com.junia.loadbalancer.model.Server;
 import com.junia.loadbalancer.model.ServerStatus;
 import com.junia.loadbalancer.model.VideoStreamRequest;
@@ -73,10 +74,10 @@ class StatisticsServiceTest {
         web1.accept(new HttpRequest("R2", NOW));
         web2.accept(new FileUploadRequest("R3", NOW, 10));
 
-        Map<String, Long> counts = statistics.countRequestsByType(List.of(web1, web2));
+        Map<RequestType, Long> counts = statistics.countRequestsByType(List.of(web1, web2));
 
-        assertEquals(2L, counts.get("HTTP"));
-        assertEquals(1L, counts.get("UPLOAD"));
-        assertNull(counts.get("STREAM"));
+        assertEquals(2L, counts.get(RequestType.HTTP));
+        assertEquals(1L, counts.get(RequestType.UPLOAD));
+        assertNull(counts.get(RequestType.STREAM));
     }
 }

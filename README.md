@@ -31,12 +31,12 @@ mvn test
 
 Dans IntelliJ : clic droit sur le dossier `src/test/java`, puis « Run 'All Tests' ».
 
-Les tests JUnit 5 (37 tests) vérifient la logique métier, pas les getters :
+Les tests JUnit 5 (40 tests) vérifient la logique métier, pas les getters :
 
 - `ServerTest` : acceptation d'une requête, refus quand le serveur est plein ou en panne, requêtes rendues lors d'une panne, capacité invalide.
-- `RequestTest` : calcul de la charge selon le type, valeurs minimales, paramètres invalides.
+- `RequestTest` : calcul de la charge selon le type, type de la requête, valeurs minimales, paramètres invalides.
 - `BalancingStrategyTest` : comportement de chaque stratégie, serveur en panne ignoré, aucun serveur possible, liste vide.
-- `LoadBalancerTest` : répartition, `NoServerAvailableException` quand tout est plein, ordre d'arrivée, redistribution après une panne, requêtes replacées après une réparation, serveur inconnu, noms de serveurs en double.
+- `LoadBalancerTest` : répartition, `NoServerAvailableException` quand tout est plein, ordre d'arrivée, redistribution après une panne, requêtes replacées après une réparation, serveur inconnu, noms de serveurs en double, ids de requêtes en double.
 - `StatisticsServiceTest` : moyenne sur les serveurs UP, serveur le plus chargé, équilibre (avec le cas limite à 20 points), comptage par type, liste vide.
 - `CsvParserTest` : lignes valides, `InvalidDataException` pour les lignes invalides, lignes fausses ignorées dans un fichier, fichier introuvable.
 
@@ -61,7 +61,7 @@ Chaque type de requête a une charge différente :
 
 La lecture est faite par le package `loader`. La classe abstraite `AbstractCsvParser<T>` lit le fichier, saute la ligne d'en-tête et les lignes vides, puis appelle `parseLine` pour chaque ligne. `ServerCsvParser` et `RequestCsvParser` héritent de cette classe et savent chacun transformer une ligne en objet.
 
-Si une ligne est mal écrite (mauvais nombre de colonnes, nombre ou date invalide, type inconnu...), elle est ignorée et un message indique le numéro de la ligne et la raison. Le reste du fichier est quand même chargé. Si le fichier est introuvable, l'application affiche un message d'erreur au lieu de planter.
+Si une ligne est mal écrite (mauvais nombre de colonnes, nombre ou date invalide, type inconnu...), elle est ignorée et un message indique le numéro de la ligne et la raison. Le reste du fichier est quand même chargé. Si le fichier est introuvable, l'application affiche un message d'erreur au lieu de planter. Pareil si deux serveurs ont le même nom ou si deux requêtes ont le même id : les données sont incohérentes, donc l'application s'arrête avec un message clair.
 
 ## Fonctionnalités principales
 
@@ -84,6 +84,7 @@ com.junia.loadbalancer
 │   ├── Server
 │   ├── ServerStatus        (enum UP / DOWN)
 │   ├── Request             (abstraite)
+│   ├── RequestType         (enum HTTP / UPLOAD / STREAM)
 │   ├── HttpRequest
 │   ├── FileUploadRequest
 │   └── VideoStreamRequest
@@ -140,7 +141,7 @@ Le `LoadBalancer` appelle `strategy.chooseServer(...)` sans savoir quelle strat�
 - `InvalidDataException` : lancée quand une ligne d'un fichier CSV est invalide. Elle remplace les exceptions de Java (`NumberFormatException`, `DateTimeParseException`...) par un message clair.
 - `NoServerAvailableException` : lancée par `LoadBalancer.assign()` quand aucun serveur ne peut prendre la requête (tous pleins ou en panne). Elle est attrapée pour ranger la requête dans la liste des rejetées.
 
-Les constructeurs lancent aussi des `IllegalArgumentException` (capacité négative, nom vide, deux serveurs avec le même nom dans le `LoadBalancer`...) et `Server.accept()` lance une `IllegalStateException` si le serveur ne peut pas prendre la requête.
+Les constructeurs lancent aussi des `IllegalArgumentException` (capacité négative, nom vide, deux serveurs avec le même nom ou deux requêtes avec le même id dans le `LoadBalancer`...) et `Server.accept()` lance une `IllegalStateException` si le serveur ne peut pas prendre la requête.
 
 ## Principes SOLID appliqués
 

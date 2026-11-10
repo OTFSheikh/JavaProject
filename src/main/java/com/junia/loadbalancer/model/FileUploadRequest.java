@@ -21,8 +21,8 @@ public class FileUploadRequest extends Request {
     }
 
     @Override
-    public String getType() {
-        return "UPLOAD";
+    public RequestType getType() {
+        return RequestType.UPLOAD;
     }
 
     public int getFileSizeMb() {

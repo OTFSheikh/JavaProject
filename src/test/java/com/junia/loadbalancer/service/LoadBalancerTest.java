@@ -120,6 +120,26 @@ class LoadBalancerTest {
     }
 
     @Test
+    void shouldRefuseTwoRequestsWithSameId() {
+        List<Request> requests = List.of(
+                new HttpRequest("R1", NOW),
+                new HttpRequest("R1", NOW.plusSeconds(1))
+        );
+
+        assertThrows(IllegalArgumentException.class, () -> loadBalancer.assignAll(requests));
+        // rien n'a ete reparti
+        assertEquals(0, web1.getCurrentLoad() + web2.getCurrentLoad());
+    }
+
+    @Test
+    void shouldRefuseRequestIdAlreadyAssigned() {
+        loadBalancer.assignAll(List.of(new HttpRequest("R1", NOW)));
+
+        assertThrows(IllegalArgumentException.class,
+                () -> loadBalancer.assignAll(List.of(new HttpRequest("R1", NOW.plusSeconds(1)))));
+    }
+
+    @Test
     void shouldThrowExceptionForUnknownServer() {
         assertThrows(IllegalArgumentException.class, () -> loadBalancer.failServer("toto"));
         assertThrows(IllegalArgumentException.class, () -> loadBalancer.recoverServer("toto"));

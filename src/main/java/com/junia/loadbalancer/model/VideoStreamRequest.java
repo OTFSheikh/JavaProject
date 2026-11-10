@@ -21,8 +21,8 @@ public class VideoStreamRequest extends Request {
     }
 
     @Override
-    public String getType() {
-        return "STREAM";
+    public RequestType getType() {
+        return RequestType.STREAM;
     }
 
     public int getDurationMinutes() {

@@ -22,7 +22,7 @@ public abstract class Request {
     // chaque type de requete calcule sa propre charge
     public abstract int getLoad();
 
-    public abstract String getType();
+    public abstract RequestType getType();
 
     public String getId() {
         return id;

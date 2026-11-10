@@ -17,6 +17,7 @@ public class LoadBalancer {
     private final List<Server> servers;
     private final BalancingStrategy strategy;
     private final List<Request> rejectedRequests;
+    private final Set<String> requestIds;
 
     public LoadBalancer(List<Server> servers, BalancingStrategy strategy) {
         if (servers == null || strategy == null) {
@@ -26,6 +27,7 @@ public class LoadBalancer {
         this.servers = new ArrayList<>(servers);
         this.strategy = strategy;
         this.rejectedRequests = new ArrayList<>();
+        this.requestIds = new HashSet<>();
     }
 
     public Server assign(Request request) throws NoServerAvailableException {
@@ -38,6 +40,8 @@ public class LoadBalancer {
     }
 
     public void assignAll(List<Request> requests) {
+        checkUniqueIds(requests);
+
         List<Request> sorted = new ArrayList<>(requests);
         sorted.sort(Comparator.comparing(Request::getArrivalTime));
 
@@ -95,6 +99,18 @@ public class LoadBalancer {
                 throw new IllegalArgumentException("Deux serveurs ont le meme nom : " + server.getName());
             }
         }
+    }
+
+    // on verifie tout avant de repartir, pour ne pas s'arreter au milieu
+    private void checkUniqueIds(List<Request> requests) {
+        Set<String> newIds = new HashSet<>();
+        for (Request request : requests) {
+            String id = request.getId();
+            if (requestIds.contains(id) || !newIds.add(id)) {
+                throw new IllegalArgumentException("Deux requetes ont le meme id : " + id);
+            }
+        }
+        requestIds.addAll(newIds);
     }
 
     private boolean tryAssign(Request request) {
