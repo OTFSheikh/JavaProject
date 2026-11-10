@@ -57,10 +57,25 @@ public class LoadBalancer {
         return lostRequests;
     }
 
-    public void recoverServer(String name) {
+    // le serveur revient : on retente les requetes rejetees
+    public List<Request> recoverServer(String name) {
         Server server = findServer(name)
                 .orElseThrow(() -> new IllegalArgumentException("Serveur inconnu : " + name));
         server.goUp();
+        return retryRejected();
+    }
+
+    public List<Request> retryRejected() {
+        List<Request> toRetry = new ArrayList<>(rejectedRequests);
+        rejectedRequests.clear();
+
+        List<Request> placed = new ArrayList<>();
+        for (Request request : toRetry) {
+            if (tryAssign(request)) {
+                placed.add(request);
+            }
+        }
+        return placed;
     }
 
     public Optional<Server> findServer(String name) {
